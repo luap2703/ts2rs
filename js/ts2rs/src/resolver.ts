@@ -209,11 +209,14 @@ export class TypeResolver {
 
     const declaration = this.findTypeDeclaration(sourceFile, typeName);
     if (!declaration) {
-      throw new TypeConversionError(
-        typeName,
-        "Type declaration not found",
+      // In non-strict mode, fall back to serde_json::Value for unresolvable
+      // types (classes, namespaces, etc.) instead of crashing.
+      this.handleValueFallback(
+        `Type declaration not found for "${typeName}"`,
+        undefined,
         sourceFile.getFilePath(),
       );
+      return;
     }
 
     this.processingTypes.add(typeName);
