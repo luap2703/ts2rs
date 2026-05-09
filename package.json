@@ -23,5 +23,9 @@
   },
   "peerDependencies": {
     "typescript": "catalog:"
+  },
+  "dependencies": {
+    "html-minifier-next": "^6.2.4",
+    "web-resource-inliner": "^8.0.0"
   }
 }

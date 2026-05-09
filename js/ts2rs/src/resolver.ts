@@ -292,6 +292,9 @@ export class TypeResolver {
       }
 
       for (const prop of declaration.getProperties()) {
+        // Skip computed/symbol-keyed properties (e.g. [SOURCE]?: TextFrame)
+        // — they don't serialize to JSON and can reference unresolvable class types
+        if (prop.getNameNode().getKind() === SyntaxKind.ComputedPropertyName) continue;
         fields.push(this.resolveProperty(prop));
       }
 
@@ -320,6 +323,8 @@ export class TypeResolver {
     for (const prop of properties) {
       const propDecl = prop.getDeclarations()[0];
       if (propDecl && Node.isPropertySignature(propDecl)) {
+        // Skip computed/symbol-keyed properties
+        if (propDecl.getNameNode().getKind() === SyntaxKind.ComputedPropertyName) continue;
         fields.push(this.resolveProperty(propDecl));
       }
     }
